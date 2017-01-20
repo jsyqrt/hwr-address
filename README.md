@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # hwr-address
 基于深度学习的手写汉字地址识别
 1. 汉字单字识别
@@ -44,6 +43,3 @@
 	sudo apt-get install keras
 	```
 	* 注意，在 keras 中如果以 tensorflow 作为后端，数据输入格式为 (channel, row, col)时，需要修改.keras目录下的json配置文件，将 image_dim_order 改为 'th'(theano模式，即Numpy数组的默认模式)。
-=======
-# hwr-address
->>>>>>> c05265b182049706dab0de7ebf29d6d6afe466e6
