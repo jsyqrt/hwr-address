@@ -4,7 +4,7 @@
 
 1. 汉字单字识别
 
-	* 使用 8 层CNN和 2 层全连接识别 3755 个 GB2312 一级汉字 [1]
+	* 使用 8 层CNN和 2 层全连接识别 3755 个 GB2312 一级汉字 [1]， 鉴于3755个类训练时间过长，调整为1056个类（县级以上地址的字符与一级汉字的交集）。
 
 	* 使用 2 层CNN和 1 层全连接识别 15 的中文地址关键字， ```省,市,县,区,乡,镇,村,巷,弄,路, 街, 社, 组, 队, 州```
 
@@ -50,16 +50,24 @@
 		hcl/		# HCL2000 数据库
 		result/		# train result
 		sample/		# test samples，jpg pictures
-	
-	```
+	/test
+		test_recognize.py # just run it, it will show you the result.
+	/tools/			# some io tools
 
-5. 参考文献
+	```
+5. 运行
+	```
+	cd test
+	python test_recognize.py
+
+	```
+6. 参考文献
 
 	1. Zhang X Y, Bengio Y, Liu C L. Online and Offline Handwritten Chinese Character Recognition: A Comprehensive Study and New Benchmark[J]. Pattern Recognition, 2016, 61(61):348-360.
 
 	2. Zhang H, Guo J, Chen G, et al. HCL2000 - A Large-scale Handwritten Chinese Character Database for Handwritten Character Recognition[C]// International Conference on Document Analysis and Recognition. IEEE Computer Society, 2009:286-290.
 
-6. 工具的安装和使用
+7. 工具的安装
 
 	* tensorflow, Ubuntu可以直接通过``` sudo apt-get install tensorflow ```安装, GPU版本及cuda的安装参见 [这里](http://blog.csdn.net/zhaoyu106/article/details/52793183)
 
