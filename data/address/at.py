@@ -3,6 +3,8 @@
 # address tree.
 
 import os
+CURRENT_DIRECTORY = os.path.split(os.path.realpath(__file__))[0]+'/'
+
 
 class node:
 	def __init__(self, data):
@@ -78,27 +80,82 @@ def read_dir_string_list_from(filename):
 
 def at():
 	''' return an address tree. '''
+	print 'building address tree.'
 	import pickle
-	if not os.path.exists('./at.t'):
-		d = read_dir_string_list_from('./lt.txt')
+	address_tree_path = os.path.join(CURRENT_DIRECTORY, 'at.t')
+	address_file_path = os.path.join(CURRENT_DIRECTORY, 'lt.txt')
+	
+	'''
+	if not os.path.exists(address_tree_path):
+		d = read_dir_string_list_from(address_file_path)
 		t = build_address_tree(d)
-		with open('./at.t','wb') as f:
+		with open(address_tree_path,'wb') as f:
 			pickle.dump(t, f)
 		return t
 	else:
-		with open('./at.t', 'rb') as f:
+		with open(address_tree_path, 'rb') as f:
 			t = pickle.load(f)
 		return t
-
-def validate(k_char_list, full_char_list):
 	'''
-	input: k_char_list, full_char_list
-	output: recognize_result
+	d = read_dir_string_list_from(address_file_path)
+	t = build_address_tree(d)
+	return t
 
-	examples:	k_char_list = [(['省','市','县',...,],[0.8, 0.1,0.05,0.005,...,]),(),()]
-	'''
-	at = at()
-	root = '中国'
-	path = [root]
-	
-	at.search(path)
+def generate_regular_address_string(want_num = 1000, file_path = './ra.txt', to_country = True):
+	import random
+	t = at()
+	path = [u'中国']
+	addresses = []
+	while len(addresses) < 1000:
+		print len(addresses)
+		try:
+			prov = t.search(path).getchildren()[random.randrange(len(t.search(path).getchildren()))].getdata()
+			path.append(prov)
+			city = t.search(path).getchildren()[random.randrange(len(t.search(path).getchildren()))].getdata()
+			path.append(city)
+			county = t.search(path).getchildren()[random.randrange(len(t.search(path).getchildren()))].getdata()
+			path.append(county)
+			if to_country:
+				town = t.search(path).getchildren()[random.randrange(len(t.search(path).getchildren()))].getdata()
+				path.append(town)
+				country = t.search(path).getchildren()[random.randrange(len(t.search(path).getchildren()))].getdata()
+				path.append(country)
+			else:
+				pass
+			
+			a =''.join(path[1:])
+			addresses.append(a)
+			print a
+			path = path[:1]
+		except:
+			path = path[:1]
+			print 'search error'
+	with open(file_path, 'w') as f:
+		for i in addresses:
+			f.write(i.encode('utf8')+'\n')
+
+def validate(t, k_char_list, full_char_list):
+
+	import sys
+	sys.path.append('../../tools/')	
+	import tools
+	result = [full_char_list[i][0][0].decode('utf8') if k_char_list[i][0][0] == 'X' else k_char_list[i][0][0].decode('utf8') for i in range(len(full_char_list))]
+	full_result = ''.join(result).encode('utf8')
+	try:
+		path = [u'中国']
+		index = 0
+		while index < len(full_char_list):
+			addresss = t.search(path).getchildren()
+			addresssc = {}
+			for i in addresss:
+				x = i.getdata()
+				sim = tools.levenshtein(result[index:index+len(x)], x)
+				addresssc[sim] = x
+			address = addresssc[max(addresssc.keys())]
+			path.append(address)
+			index += len(address)
+		result = ''.join(path[1:]).encode('utf8')
+	except:
+		result = full_result
+
+	return (result, full_result)

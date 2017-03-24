@@ -2,21 +2,18 @@
 # recognize.py
 # to combine all functions defined before to realize the recogniztion of HCCR.
 
-from preprocess import preprocess
+import input_data
+from hccrn import recognizer
 
-from tfk import keyword_recognizer
-from tf3755 import full_recognizer
-import at
+k = recognizer(*input_data.arguments['kwd'])
+f = recognizer(*input_data.arguments['full'])
+t = input_data.at.at()
 
-def __init__():
-	pass
-
-k = keyword_recognizer()
-f = full_recognizer()
-
-def recognize(img):
-	charlist = preprocess(img)
-	k_char_list = k.recognize(charlist)
-	full_char_list = f.recognize(charlist)
-	result = at.validate(k_char_list, full_char_list)
+def recognize(img_file_path):
+	charlist = input_data.preprocess(img_file_path)
+	k_char_list = k.recognize(charlist, input_data.keyword_list)
+	full_char_list = f.recognize(charlist, input_data.full_list)
+	result = input_data.at.validate(t, k_char_list, full_char_list)
 	return result
+
+#print recognize('../data/sample/test/安徽省安庆市望江县杨湾镇曾墩村委会.jpg')

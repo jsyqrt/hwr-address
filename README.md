@@ -67,8 +67,8 @@
 
 	```
 	# keras依赖库
-	sudo apt-get install liblapcak-dev, gfortran, scipy, cython, libhdf5-dev, h5py
-	sudo apt-get install keras
+	sudo apt-get install liblapack-dev gfortran python-scipy cython libhdf5-dev python-h5py
+	sudo pip install keras
 	```
 
 	* 注意，在 keras 中如果以 tensorflow 作为后端，数据输入格式为 (channel, row, col)时，需要修改.keras目录下的json配置文件，将 image_dim_order 改为 'th'(theano模式，即Numpy数组的默认模式)。
