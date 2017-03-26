@@ -110,7 +110,7 @@ class recognizer:
 		else:
 			self.model = model_compile(self.model)
 			self.model = model_train(self.model, dataset, batch_size, self.weights_path, self.history_path, nb_epoch, samples_per_epoch)
-		#model_test(self.model, dataset, batch_size * nb_epoch)
+		model_test(self.model, dataset, batch_size * nb_epoch)
 	
 	def recognize(self, x, char_list = input_data.keyword_list):
 		#return input_data.index_to_char(self.model.predict_classes(x), char_list)
@@ -132,7 +132,7 @@ if __name__ == '__main__':
 		dataset = input_data.hcl.input_data(input_data.keyword_list, raw_data = False, direct_info = False)
 		
 		kwd_recognizer = recognizer(dataset, input_shape, output_shape, weights_dir, weights_name, history_name, batch_size, nb_epoch, samples_per_epoch, retrain)
-		print kwd_recognizer.recognize(dataset.next_batch(50, 'test')[0])
+		#print kwd_recognizer.recognize(dataset.next_batch(50, 'test')[0])
 
 	elif (network == 'f'):
 		input_shape = (1, 32, 32)

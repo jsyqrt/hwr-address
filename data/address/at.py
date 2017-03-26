@@ -141,10 +141,12 @@ def validate(t, k_char_list, full_char_list):
 	import tools
 	result = [full_char_list[i][0][0].decode('utf8') if k_char_list[i][0][0] == 'X' else k_char_list[i][0][0].decode('utf8') for i in range(len(full_char_list))]
 	full_result = ''.join(result).encode('utf8')
+	split_index = []
 	try:
 		path = [u'中国']
 		index = 0
 		while index < len(full_char_list):
+			split_index.append(index)
 			addresss = t.search(path).getchildren()
 			addresssc = {}
 			for i in addresss:
@@ -157,5 +159,5 @@ def validate(t, k_char_list, full_char_list):
 		result = ''.join(path[1:]).encode('utf8')
 	except:
 		result = full_result
-
-	return (result, full_result)
+		split_index = [i for i in range(len(full_result))]
+	return (result, full_result, split_index)

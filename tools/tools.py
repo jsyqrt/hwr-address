@@ -22,7 +22,9 @@ def get_n_samples(samples_path, n):
 	return samples
 
 def compare_result(name, result):
-	return levenshtein(name, result)
+	#return levenshtein(name, result)
+	length = min(len(name), len(result))
+	return sum([1 if name[i]==result[i] else 0 for i in range(length)])/length
 
 # to use levenshtein algorithm to calculate the similarity of two string.
 def levenshtein(x, y):
