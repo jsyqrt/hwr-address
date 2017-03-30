@@ -96,19 +96,18 @@ def model_predict(model, x):
 
 class recognizer:
 
-	def __init__(self, dataset, input_shape, output_shape, weights_dir, weights_name, history_name, batch_size, nb_epoch, samples_per_epoch, retrain = False):
+	def __init__(self, dataset, input_shape, output_shape, weights_dir, weights_name, history_name, batch_size, nb_epoch, samples_per_epoch, continue_train = False):
 
-		print 'train info: input_shape:', input_shape, 'output_shape:', output_shape, 'weights_dir:', weights_dir, 'weights_name:', weights_name, 'history_name:', history_name, 'batch_size:', batch_size, 'nb_epoch:', nb_epoch, 'samples_per_epoch:', samples_per_epoch, 'retrain:', retrain
+		print 'train info: input_shape:', input_shape, 'output_shape:', output_shape, 'weights_dir:', weights_dir, 'weights_name:', weights_name, 'history_name:', history_name, 'batch_size:', batch_size, 'nb_epoch:', nb_epoch, 'samples_per_epoch:', samples_per_epoch, 'continue_train:', continue_train
 		
 		self.weights_path = weights_dir + weights_name
 		self.history_path = weights_dir + history_name
 		
 		self.model = model_define(input_shape, output_shape)
-		if os.path.exists(self.weights_path) & (not retrain):
+		if os.path.exists(self.weights_path):
 			self.model = model_restore(self.model, self.weights_path)
-			self.model = model_compile(self.model)
-		else:
-			self.model = model_compile(self.model)
+		self.model = model_compile(self.model)
+		if continue_train:
 			self.model = model_train(self.model, dataset, batch_size, self.weights_path, self.history_path, nb_epoch, samples_per_epoch)
 		model_test(self.model, dataset, batch_size * nb_epoch)
 	
@@ -119,7 +118,7 @@ class recognizer:
 if __name__ == '__main__':
 	import sys
 	network = sys.argv[1]
-	retrain = (sys.argv[2] == 'y')
+	continue_train = (sys.argv[2] == 'y')
 	weights_dir = '../data/result/'
 	if (network == 'k'):
 		input_shape = (1, 32, 32)
@@ -131,7 +130,7 @@ if __name__ == '__main__':
 		history_name = 'kwd_history.txt'
 		dataset = input_data.hcl.input_data(input_data.keyword_list, raw_data = False, direct_info = False)
 		
-		kwd_recognizer = recognizer(dataset, input_shape, output_shape, weights_dir, weights_name, history_name, batch_size, nb_epoch, samples_per_epoch, retrain)
+		kwd_recognizer = recognizer(dataset, input_shape, output_shape, weights_dir, weights_name, history_name, batch_size, nb_epoch, samples_per_epoch, continue_train)
 		#print kwd_recognizer.recognize(dataset.next_batch(50, 'test')[0])
 
 	elif (network == 'f'):
@@ -144,6 +143,6 @@ if __name__ == '__main__':
 		history_name = 'full_history.txt'
 		dataset = input_data.hcl.input_data(input_data.full_list, raw_data = False, direct_info = False)
 
-		full_recognizer = recognizer(dataset, input_shape, output_shape, weights_dir, weights_name, history_name, batch_size, nb_epoch, samples_per_epoch, retrain)
+		full_recognizer = recognizer(dataset, input_shape, output_shape, weights_dir, weights_name, history_name, batch_size, nb_epoch, samples_per_epoch, continue_train)
 	else:
 		print 'wrong input! quit...'

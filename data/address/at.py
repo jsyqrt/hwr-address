@@ -101,12 +101,19 @@ def at():
 	t = build_address_tree(d)
 	return t
 
-def generate_regular_address_string(want_num = 1000, file_path = './ra.txt', to_country = True):
+def generate_regular_address_string(want_num = 2000, file_path = './ra.txt', to_country = True):
 	import random
+	import sys
+	sys.path.append('../../src/')
+	import small_char_set
+	gb2312_path = '../hcl/GB2312_3755.txt'
+	full_list = [i.rstrip('\n') for i in open(gb2312_path, 'r').readlines()]
+	small_list = list(set(small_char_set.samll_char_set).intersection(set(full_list)))
+	full_list = small_list
 	t = at()
 	path = [u'中国']
 	addresses = []
-	while len(addresses) < 1000:
+	while len(addresses) < want_num:
 		print len(addresses)
 		try:
 			prov = t.search(path).getchildren()[random.randrange(len(t.search(path).getchildren()))].getdata()
@@ -124,8 +131,9 @@ def generate_regular_address_string(want_num = 1000, file_path = './ra.txt', to_
 				pass
 			
 			a =''.join(path[1:])
-			addresses.append(a)
-			print a
+			if sum([1 if i.encode('utf8') not in full_list else 0 for i in a])<=0:
+				addresses.append(a)
+				print a
 			path = path[:1]
 		except:
 			path = path[:1]
@@ -133,7 +141,7 @@ def generate_regular_address_string(want_num = 1000, file_path = './ra.txt', to_
 	with open(file_path, 'w') as f:
 		for i in addresses:
 			f.write(i.encode('utf8')+'\n')
-
+#generate_regular_address_string()
 def validate(t, k_char_list, full_char_list):
 
 	import sys

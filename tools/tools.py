@@ -6,7 +6,7 @@ from __future__ import division
 source_script_path = '../src/'
 data_file_path = '../data/'
 test_script_path = '../test/'
-test_sameles_path = data_file_path + 'sample/test'
+test_sameles_path = data_file_path + 'sample/test/smallset/'
 
 import os
 import sys
