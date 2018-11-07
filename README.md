@@ -1,4 +1,4 @@
-# hwr-address
+# hwr-address !!! This is Deprecated!!!
 
 基于深度学习的手写汉字地址识别
 
